@@ -1,0 +1,18 @@
+{
+  "ignore_dirs": [
+    ".git",
+    ".github",
+    "node_modules",
+    "__pycache__",
+    "venv",
+    ".venv",
+    "vendor",
+    "dist",
+    "build",
+    "target"
+  ],
+
+  "max_depth": 3,
+
+  "allow_override": true
+}
