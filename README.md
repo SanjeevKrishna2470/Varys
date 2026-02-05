@@ -45,7 +45,7 @@ Get running in under 2 minutes.
 **1. Clone & Enter**
 
 ```bash
-git clone https://github.com/your-username/Sietch_Scanner.git
+git clone https://github.com/SanjeevKrishna2470/Sietch_Scanner.git
 cd Sietch_Scanner
 
 ```
