@@ -1,6 +1,6 @@
 
 ```
-# 🕵️ Varys (v2)
+### 🕵️ Varys (v2)
 
 **Zero-Clone GitHub Security Auditing & Secret Detection Engine**
 
@@ -10,7 +10,7 @@ Varys scans GitHub repositories for exposed secrets, risky artifacts, and depend
 
 ---
 
-## ⚡ Why Varys?
+###⚡ Why Varys?
 
 Most security scanners fail by choosing the wrong tradeoff:
 - **Full clones** → slow, noisy, bandwidth-heavy.
@@ -26,7 +26,7 @@ Silent. Fast. Complete.
 
 ---
 
-## 🧠 Scanning Modes
+### 🧠 Scanning Modes
 
 ### 🚀 QuickScan (Streaming Audit)
 
