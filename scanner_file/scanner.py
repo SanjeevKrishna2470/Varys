@@ -9,6 +9,7 @@ from types import SimpleNamespace
 import json
 import typer
 from importlib import resources 
+
 load_dotenv()
 
 app=typer.Typer(add_completion=False)
