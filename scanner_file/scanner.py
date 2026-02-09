@@ -7,6 +7,14 @@ from dotenv import load_dotenv
 import fnmatch
 from types import SimpleNamespace
 import json
+import typer
+from importlib import resources 
+import scanner_file
+load_dotenv()
+
+app=typer.Typer(add_completion=False)
+
+
 
 Session_Store=[]
 
@@ -29,7 +37,7 @@ def create_vulnerability_entry(rule_id, name, file_path, risk, desc, repo_name, 
     }
 
 def load_policy(path='policy.json'):
-    with open(path,"r") as f:
+    with resources.files("scanner_file").joinpath("policy.json").open("r") as f:
         return json.load(f)
     
 
@@ -38,7 +46,7 @@ IGNORE_DIRS=set(POLICY["ignore_dirs"])
 MAX_DEPTH=POLICY["max_depth"]
 
 def load_signatures(path='signatures.json'):
-    with open(path,"r") as f:
+    with resources.files("scanner_file").joinpath("signatures.json").open("r") as f:
         return json.load(f)
     
 
@@ -84,26 +92,42 @@ def initialize_scanner(signatures_data):
 SIGNATURES_JSON = load_signatures()
 initialize_scanner(SIGNATURES_JSON)
 
-def connect_to_github():
-    load_dotenv()
-    token = os.getenv('GITHUB_TOKEN')
-    if not token: 
-        print("❌ Error: GITHUB_TOKEN not found.")
-        return None
+
+
+
+def connect_to_github(token):
     auth = Auth.Token(token)
     g = Github(auth=auth, timeout=60)
     user = g.get_user()
     print(f"Connected to GitHub as {user.login}")
     return g
 
-g = connect_to_github()
+@app.command()
+def snapshot(repo: str = typer.Argument(...,help="Target Repository (owner/repo)"),
+             token: str = typer.Option(...,help="Github Token",envvar="GITHUB_TOKEN")):
+    if not token: 
+        print("❌ Error: GITHUB_TOKEN not found.")
+        return None
+    g=connect_to_github(token)
+    
+    contents, repo = get_repo_files(repo,g)
+    if repo:
+        # FIX: Start at degree 0
+        all_files = get_all_files(contents, repo, 0)
+        # FIX: Added 'repo' argument
+        found = find_dependencies(all_files, repo)
+        check_found(found) 
+        json_writer()
 
-def get_repo_files():
-    repo_name = input("Enter the repository name (e.g. owner/repo): ")
+
+
+
+
+def get_repo_files(repo_name,g):
     try:
-        repo = g.get_repo(repo_name)
-        contents = repo.get_contents("")
-        return contents, repo
+        target = g.get_repo(repo_name)
+        contents = target.get_contents("")
+        return contents,target
     except Exception as e:
         print(f"Error accessing repo: {e}")
         return [], None
@@ -261,18 +285,11 @@ def check_found(found):
     if not found:
         print("No target files found.")
 
-def Snapshot():
-    contents, repo = get_repo_files()
-    if repo:
-        # FIX: Start at degree 0
-        all_files = get_all_files(contents, repo, 0)
-        # FIX: Added 'repo' argument
-        found = find_dependencies(all_files, repo)
-        check_found(found) 
-        json_writer()
-    
-def QuickScan():
-    contents, repo = get_repo_files()
+@app.command()   
+def QuickScan(repo: str=typer.Argument(...,help="Target Repository (owner/repo)"),
+              token:str=typer.Option(...,help="Github Token",envvar="GITHUB_TOKEN")):
+    g=connect_to_github(token)
+    contents, repo = get_repo_files(repo,g)
     if repo:
         # Start at degree 0
         found = print_all_files(contents, repo, 0)
@@ -280,15 +297,8 @@ def QuickScan():
 
 
 
-if __name__ == "__main__":
-    x=input("Type 1 for Snapshot and 2 for QuickScan")
-    if(x==1):
-        print("==Snapshot Scan==")
-        Snapshot()
-    else:
-        print("=QuickScan=")
-        QuickScan()
-
-    
+def main():
+    # Choose one:
+    app()
 
 print(f"Total vulnerabilities found: {len(Session_Store)}")

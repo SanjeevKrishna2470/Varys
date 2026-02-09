@@ -1,0 +1,2 @@
+[console_scripts]
+sietch = scanner_file.scanner:main

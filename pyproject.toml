@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sietch-scanner"
+version = "0.1.0"
+description = "A Universal MVVP Security Scanner for OT, Space, and Web Repos."
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [
+    {name = "Your Name", email = "your.email@example.com"}
+]
+dependencies = [
+    "PyGithub",
+    "python-dotenv",
+    "typer[all]",
+    "colorama"  # Optional: For colored terminal output if you add it later
+]
+
+[project.scripts]
+# This is the magic line. 
+# It says: "When I type 'sietch', run the 'app' object inside 'scanner.py'"
+sietch = "scanner_file.scanner:main"
