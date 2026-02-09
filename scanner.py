@@ -261,6 +261,7 @@ def check_found(found):
     if not found:
         print("No target files found.")
 
+<<<<<<< Updated upstream:scanner.py
 def Snapshot():
     contents, repo = get_repo_files()
     if repo:
@@ -273,6 +274,13 @@ def Snapshot():
     
 def QuickScan():
     contents, repo = get_repo_files()
+=======
+@app.command()   
+def quickscan(repo: str=typer.Argument(...,help="Target Repository (owner/repo)"),
+              token:str=typer.Option(...,help="Github Token",envvar="GITHUB_TOKEN")):
+    g=connect_to_github(token)
+    contents, repo = get_repo_files(repo,g)
+>>>>>>> Stashed changes:scanner_file/scanner.py
     if repo:
         # Start at degree 0
         found = print_all_files(contents, repo, 0)
