@@ -1,0 +1,9 @@
+README.md
+pyproject.toml
+scanner.py
+sietch_scanner.egg-info/PKG-INFO
+sietch_scanner.egg-info/SOURCES.txt
+sietch_scanner.egg-info/dependency_links.txt
+sietch_scanner.egg-info/entry_points.txt
+sietch_scanner.egg-info/requires.txt
+sietch_scanner.egg-info/top_level.txt

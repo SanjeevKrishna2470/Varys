@@ -1,0 +1,154 @@
+Metadata-Version: 2.4
+Name: sietch-scanner
+Version: 0.1.0
+Summary: A Universal MVVP Security Scanner for OT, Space, and Web Repos.
+Author-email: Your Name <your.email@example.com>
+License: MIT
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: PyGithub
+Requires-Dist: python-dotenv
+Requires-Dist: typer[all]
+Requires-Dist: colorama
+
+
+
+# 🛡️ Sietch Scanner (v1.0)
+
+**Automated GitHub Security Auditing & Secret Detection Engine**
+
+> *Stop vulnerabilities before they reach production.*
+
+Sietch Scanner is a high-performance security auditing tool designed for DevSecOps teams and security researchers. Unlike basic regex scripts, Sietch uses a **hybrid traversal engine** that intelligently switches between API streaming and Git Tree snapshots to audit repositories of any size without exhausting API rate limits.
+
+Detect hardcoded secrets, flag risky file signatures, and audit dependency chains—all in seconds.
+
+---
+
+## ⚡ Why Sietch?
+
+Most scanners are either too slow (cloning the whole repo) or too shallow (missing files deep in the tree). Sietch Scanner solves this with a smarter approach:
+
+* **🔍 Deep Packet Inspection:** Does not just look at filenames—it reads file content for high-risk patterns (AWS keys, private tokens).
+* **🧠 Intelligent Traversal:** Automatically detects when a directory is too deep or complex and switches strategies to ensure 100% coverage.
+* **⚡ Zero-Clone Scanning:** Audits directly via the GitHub API. No local storage required. No massive `git clone` delays.
+
+## 🚀 Key Capabilities
+
+### 1. Adaptive Scanning Modes
+
+* **📸 Snapshot Mode (Deep Audit):** Builds a complete in-memory map of the repository structure before scanning. Ideal for comprehensive compliance audits.
+* **🚀 QuickScan Mode (Fast Audit):** Streams files immediately as they are discovered. Perfect for CI/CD pipelines needing instant feedback.
+
+### 2. The "Hybrid" Engine
+
+Sietch respects your API quota. It traverses standard directories normally, but upon hitting `MAX_DEPTH`, it instantly switches to a **Git Tree Snapshot**, retrieving thousands of nested files in a single API call.
+
+### 3. Vulnerability Database
+
+* **Secret Detection:** Pre-compiled regex patterns for AWS, Google Cloud, Slack, and generic private keys.
+* **Supply Chain Security:** Parses `requirements.txt` to flag dependencies against a known vulnerability database (CVE-mapping ready).
+
+---
+
+## 🛠️ Quick Start
+
+Get running in under 2 minutes.
+
+**1. Clone & Enter**
+
+```bash
+git clone https://github.com/your-username/Sietch_Scanner.git
+cd Sietch_Scanner
+
+```
+
+**2. Arm the Scanner**
+
+```bash
+pip install PyGithub python-dotenv
+
+```
+
+**3. Authenticate**
+Create a `.env` file to safely store your GitHub credentials (never hardcode them!).
+
+```bash
+# .env
+GITHUB_TOKEN=ghp_your_personal_access_token_here
+
+```
+
+**4. Launch**
+
+```bash
+python main.py
+
+```
+
+---
+
+## ⚙️ Surgical Configuration
+
+Control the scanner's behavior with precision using JSON config files.
+
+### `policy.json` (The Scope)
+
+Define where the scanner should look—and where it shouldn't.
+
+```json
+{
+  "ignore_dirs": [".git", "node_modules", "dist"],
+  "max_depth": 5  // Automatically switches to Snapshot Strategy beyond this depth
+}
+
+```
+
+### `signatures.json` (The Threat Intel)
+
+Fully customizable rules engine. Add your own proprietary patterns or internal filenames.
+
+* **`vulnerability_patterns`**: Regex for secrets.
+* **`file_signatures`**: Dangerous filenames (`id_rsa`, `.pypirc`).
+* **`dependency_files`**: Manifests to audit (`requirements.txt`, `package.json`).
+
+---
+
+## 📊 Actionable Reporting
+
+Don't just get a pass/fail. Get a forensic report.
+Sietch generates a `scan_results.json` artifact containing evidence for every finding:
+
+```json
+[
+    {
+        "rule_id": "aws_key",
+        "risk": "CRITICAL",
+        "file": "src/config/deploy.py",
+        "evidence": "AKIAIOSFODNN7EXAMPLE",
+        "description": "Potential AWS Access Key ID detected",
+        "timestamp": "2023-10-27T14:30:00"
+    }
+]
+
+```
+
+---
+
+## 🗺️ Roadmap: The Path to v2.0
+
+We are actively evolving Sietch Scanner from a powerful script into a CLI platform.
+
+* ✅ **v1.0 (Current):** Core Logic, Hybrid Traversal, JSON Reporting.
+* 🚧 **v1.5:** Multi-repo scanning & Organization-wide auditing.
+* 🔜 **v2.0 (The CLI Update):** Full command-line interface (e.g., `sietch audit --org my-company --json`), removing the need for `main.py` entry.
+* 🔜 **CI/CD Integration:** Native GitHub Action for PR blocking.
+
+---
+
+## 🤝 Contributing
+
+Security is a community effort. Found a bug? Want to add a new regex signature?
+Open an issue or submit a PR.
+
+**License:** MIT
