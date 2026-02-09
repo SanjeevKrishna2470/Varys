@@ -22,4 +22,4 @@ dependencies = [
 [project.scripts]
 # This is the magic line. 
 # It says: "When I type 'sietch', run the 'app' object inside 'scanner.py'"
-sietch = "scanner:app"
+sietch = "scanner_file.scanner:main"

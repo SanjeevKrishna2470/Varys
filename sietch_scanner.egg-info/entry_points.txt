@@ -1,2 +1,2 @@
 [console_scripts]
-sietch = scanner:app
+sietch = scanner_file.scanner:main

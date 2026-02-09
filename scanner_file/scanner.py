@@ -8,7 +8,8 @@ import fnmatch
 from types import SimpleNamespace
 import json
 import typer
-
+from importlib import resources 
+import scanner_file
 load_dotenv()
 
 app=typer.Typer(add_completion=False)
@@ -36,7 +37,7 @@ def create_vulnerability_entry(rule_id, name, file_path, risk, desc, repo_name, 
     }
 
 def load_policy(path='policy.json'):
-    with open(path,"r") as f:
+    with resources.files("scanner_file").joinpath("policy.json").open("r") as f:
         return json.load(f)
     
 
@@ -45,7 +46,7 @@ IGNORE_DIRS=set(POLICY["ignore_dirs"])
 MAX_DEPTH=POLICY["max_depth"]
 
 def load_signatures(path='signatures.json'):
-    with open(path,"r") as f:
+    with resources.files("scanner_file").joinpath("signatures.json").open("r") as f:
         return json.load(f)
     
 
